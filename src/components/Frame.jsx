@@ -1,6 +1,15 @@
 import React from "react";
-import { HiOutlineSearch } from "react-icons/hi";
 import Card from "./Card";
+import {
+  CreatePost,
+  CreateUser,
+  EditPost,
+  EditUser,
+  PreviewImagePost,
+  PreviewImageUser,
+} from "./Modal";
+import { HiOutlineSearch } from "react-icons/hi";
+import logo from "../assets/logo.svg";
 
 function Home() {
   return (
@@ -29,9 +38,12 @@ function User() {
       id="user-tab"
       className="w-full flex flex-col items-center mt-8 gap-4 px-8"
     >
-      <button className="px-10 py-2 border rounded-md bg-green-600 hover:brightness-125 text-white font-semibold">
+      <label
+        htmlFor="my-modal"
+        className="px-10 py-2 border rounded-md bg-green-600 hover:brightness-125 text-white font-semibold cursor-pointer"
+      >
         Create Account
-      </button>
+      </label>
       <table className="w-full md:w-8/12 border shadow-md">
         <tr id="header" className="w-full flex  border-b">
           <th className="w-1/3">Name</th>
@@ -40,19 +52,27 @@ function User() {
         </tr>
         <tr id="content" className="w-full py-4 flex border-b">
           <td className="w-1/3 flex items-center justify-center">Handoko</td>
-          <td className="w-1/3 border-x flex justify-center items-center cursor-pointer">
-            <HiOutlineSearch viewBox="0 0 24 24" className="w-10 h-10" />
+          <td className="w-1/3 border-x flex justify-center items-center">
+            <label htmlFor="my-modal-4" className="cursor-pointer">
+              <img src={logo} alt="" className="w-20 h-20" />
+            </label>
           </td>
           <td className="w-1/3 flex flex-col sm:flex-row justify-center items-center gap-2">
-            <button className="px-4 py-1 rounded-md bg-blue-500 hover:brightness-90 text-white text-sm font-semibold">
+            <label
+              htmlFor="my-modal-3"
+              className="px-4 py-1 rounded-md bg-blue-500 hover:brightness-90 text-white text-sm font-semibold cursor-pointer"
+            >
               Edit
-            </button>
+            </label>
             <button className="px-3 py-1 rounded-md bg-red-500 hover:brightness-90 text-white text-sm font-semibold">
               Delete
             </button>
           </td>
         </tr>
       </table>
+      <CreateUser />
+      <EditUser />
+      <PreviewImageUser />
     </div>
   );
 }
@@ -63,9 +83,12 @@ function Post() {
       id="user-tab"
       className="w-full flex flex-col items-center mt-8 gap-4 px-4 md:px-8"
     >
-      <button className="px-10 py-2 border rounded-md bg-green-600 hover:brightness-125 text-white font-semibold">
+      <label
+        htmlFor="my-modal"
+        className="px-10 py-2 border rounded-md bg-green-600 hover:brightness-125 text-white font-semibold cursor-pointer"
+      >
         Create Post
-      </button>
+      </label>
       <table className="w-full md:w-10/12 border shadow-md">
         <tr id="header" className="w-full flex  border-b">
           <th className="w-1/3 border-r">Caption</th>
@@ -82,21 +105,29 @@ function Post() {
             Handoko
           </td>
           <td className="w-1/5 border-r flex justify-center items-center cursor-pointer">
-            <HiOutlineSearch viewBox="0 0 24 24" className="w-10 h-10" />
+            <label htmlFor="my-modal-4" className="cursor-pointer">
+              <img src={logo} alt="" className="w-20 h-20" />
+            </label>
           </td>
           <td className="w-1/5 flex items-center justify-center border-r">
             Handoko
           </td>
           <td className="w-1/5 flex flex-col sm:flex-row justify-center items-center gap-2">
-            <button className="px-4 py-1 rounded-md bg-blue-500 hover:brightness-90 text-white text-sm font-semibold">
+            <label
+              htmlFor="my-modal-3"
+              className="px-4 py-1 rounded-md bg-blue-500 hover:brightness-90 text-white text-sm font-semibold cursor-pointer"
+            >
               Edit
-            </button>
+            </label>
             <button className="px-3 py-1 rounded-md bg-red-500 hover:brightness-90 text-white text-sm font-semibold">
               Delete
             </button>
           </td>
         </tr>
       </table>
+      <EditPost />
+      <CreatePost />
+      <PreviewImagePost />
     </div>
   );
 }
