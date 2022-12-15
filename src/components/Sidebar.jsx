@@ -5,7 +5,7 @@ import { MdImage } from "react-icons/md";
 
 function Sidebar({ handleOpenHome, handleOpenUser, handleOpenPost, status }) {
   return (
-    <div className="sidebar w-56 min-h-screen border-r flex flex-col gap-4 bg-white">
+    <div className="sidebar fixed left-0 w-56 min-h-screen border-r flex flex-col gap-4 bg-white">
       <header className="w-full flex flex-col px-6">
         <h2 className="w-full text-left text-lg font-bold">Social Media</h2>
         <TiSocialInstagram id="icon" viewBox="0 0 24 24" className="w-8 h-8" />
