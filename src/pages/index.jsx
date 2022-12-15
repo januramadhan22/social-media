@@ -1,7 +1,8 @@
 import "../styles/index.css";
 import Sidebar from "../components/Sidebar";
 import { Home, User, Post } from "../components/Frame";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 function App() {
   const [openHome, setOpenHome] = useState(false);
@@ -27,7 +28,7 @@ function App() {
           setOpenUser(false);
         }}
       />
-      <div className="w-full flex flex-col">
+      <div className="ml-16 sm:ml-52 w-full flex flex-col">
         {openHome ? <Home /> : ""}
         {openUser ? <User /> : ""}
         {openPost ? <Post /> : ""}

@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import Card from "./Card";
 import {
   CreatePost,
@@ -10,8 +11,38 @@ import {
 } from "./Modal";
 import { HiOutlineSearch } from "react-icons/hi";
 import logo from "../assets/logo.svg";
+import Loading from "./Loading";
 
 function Home() {
+  const [listPosts, setListPosts] = useState([]);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [skeleton] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = () => {
+    axios
+      .get(`https://dummyapi.io/data/v1/post?limit=10&page=${page}&created=1`, {
+        headers: {
+          "app-id": process.env.REACT_APP_ID,
+        },
+      })
+      .then((res) => {
+        const results = res.data;
+        setListPosts(results.data);
+        // setPage(results.page);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
   return (
     <>
       <div id="home-tab" className="w-full flex flex-col gap-4 px-8">
@@ -26,7 +57,22 @@ function Home() {
             <HiOutlineSearch viewBox="0 0 24 24" className="w-6 h-6" />
           </button>
         </form>
-        <Card />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 2xl:grid-cols-6  items-center justify-center gap-2 md:gap-8  mb-8">
+          {loading
+            ? skeleton.map((item) => <Loading key={item} />)
+            : listPosts.map((data) => (
+                <Card
+                  key={data.id}
+                  image={data.image}
+                  tags={data.tags}
+                  caption={data.text}
+                  likes={data.likes}
+                  firstname={data.owner.firstName}
+                  lastname={data.owner.lastName}
+                />
+              ))}
+        </div>
+        <button onClick={() => fetchData()}>load more</button>
       </div>
     </>
   );
