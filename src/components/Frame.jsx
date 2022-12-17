@@ -13,6 +13,7 @@ import {
 import { HiOutlineSearch } from "react-icons/hi";
 import logo from "../assets/logo.svg";
 import Loading from "./Loading";
+import { useNavigate } from "react-router";
 
 function Home() {
   const [posts, setPosts] = useState([]);
@@ -119,117 +120,24 @@ function Home() {
   );
 }
 
-function User() {
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [skeleton] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-  const [objSubmit, setObjSubmit] = useState("");
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = () => {
-    axios
-      .get(`https://dummyapi.io/data/v1/user?created=1`, {
-        headers: {
-          "app-id": process.env.REACT_APP_ID,
-        },
-      })
-      .then((res) => {
-        const results = res.data.data;
-        setUsers(results);
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-
-  const handleCreateUser = async () => {
-    setLoading(true);
-    const formData = new FormData();
-    for (const key in objSubmit) {
-      formData.append(key, objSubmit[key]);
-    }
-    axios
-      .post("https://dummyapi.io/data/v1/user/create?created=1", objSubmit, {
-        headers: {
-          "content-type": "application/json; charset=utf-8",
-          "app-id": process.env.REACT_APP_ID,
-        },
-      })
-      .then((res) => {
-        alert("Success Create User");
-        setObjSubmit({});
-      })
-      .catch((err) => {
-        alert(err);
-      })
-      .finally(() => {
-        fetchData();
-        setLoading(false);
-      });
-  };
-
-  const handleChange = (value, key) => {
-    let temp = { ...objSubmit };
-    temp[key] = value;
-    setObjSubmit(temp);
-  };
-
-  const handleDelete = async (id) => {
-    axios
-      .delete(`https://dummyapi.io/data/v1/user/${id}?created=1`, {
-        headers: {
-          "app-id": process.env.REACT_APP_ID,
-        },
-      })
-      .then((res) => {
-        alert("Success Delete User");
-      })
-      .catch((err) => {
-        alert(err);
-      })
-      .finally(() => {
-        fetchData();
-        setLoading(false);
-      });
-  };
-
-  const handleUpdate = async (e, id) => {
-    setLoading(true);
-    e.preventDefault();
-    const formData = new FormData();
-    for (const key in objSubmit) {
-      formData.append(key, objSubmit[key]);
-    }
-    axios
-      .put(`https://dummyapi.io/data/v1/user/${id}?created=1`, objSubmit, {
-        headers: {
-          "content-type": "application/json; charset=utf-8",
-          "app-id": process.env.REACT_APP_ID,
-        },
-      })
-      .then((res) => {
-        alert("Success Edit User");
-        setObjSubmit({});
-      })
-      .catch((err) => {
-        alert("Failed Edit User");
-      })
-      .finally(() => {
-        fetchData();
-        setLoading(false);
-      });
-  };
-
-  if (loading) {
-    return <div className="w-full flex justify-center mt-8">Loading...</div>;
-  }
-
+function User({
+  dataUsers,
+  onNavigate,
+  onDelete,
+  createUser,
+  submit,
+  firstName,
+  lastName,
+  title,
+  picture,
+  email,
+  changeFirstName,
+  changeLastName,
+  changeTitle,
+  changePicture,
+  changeEmail,
+}) {
+  const [id, setId] = useState("");
   return (
     <div
       id="user-tab"
@@ -247,10 +155,12 @@ function User() {
           <th className="w-1/3 border-x">Picture</th>
           <th className="w-1/3">Action</th>
         </tr>
-        {users.map((user) => (
+        {dataUsers.map((user) => (
           <tr key={user.id} id="content" className="w-full py-4 flex border-b">
             <td className="w-1/3 flex items-center justify-center text-center">
-              {user.title} {user.firstName} {user.lastName}
+              <button onClick={() => onNavigate(user.id)}>
+                {user.title} {user.firstName} {user.lastName}
+              </button>
             </td>
             <td className="w-1/3 border-x flex justify-center items-center">
               <label htmlFor="my-modal-4" className="cursor-pointer">
@@ -263,13 +173,14 @@ function User() {
             </td>
             <td className="w-1/3 flex flex-col sm:flex-row justify-center items-center gap-2">
               <label
+                onClick={() => submit(user.id)}
                 htmlFor="my-modal-3"
                 className="px-4 py-1 rounded-md bg-blue-500 hover:brightness-90 text-white text-sm font-semibold cursor-pointer"
               >
                 Edit
               </label>
               <button
-                onClick={() => handleDelete(user.id)}
+                onClick={() => onDelete(user.id)}
                 className="px-3 py-1 rounded-md bg-red-500 hover:brightness-90 text-white text-sm font-semibold"
               >
                 Delete
@@ -279,37 +190,51 @@ function User() {
         ))}
       </table>
       <CreateUser
-        createUser={() => handleCreateUser()}
-        firstName={objSubmit.firstName}
-        lastName={objSubmit.lastName}
-        title={objSubmit.title}
-        picture={objSubmit.picture}
-        email={objSubmit.email}
-        changeFirstName={(e) => handleChange(e.target.value, "firstName")}
-        changeLastName={(e) => handleChange(e.target.value, "lastName")}
-        changetitle={(e) => handleChange(e.target.value, "title")}
-        changePicture={(e) => handleChange(e.target.value, "picture")}
-        changeEmail={(e) => handleChange(e.target.value, "email")}
+        create={() => createUser()}
+        fName={firstName}
+        lName={lastName}
+        title={title}
+        pict={picture}
+        mail={email}
+        cgFName={changeFirstName}
+        cgLName={changeLastName}
+        cgTitle={changeTitle}
+        cgPict={changePicture}
+        cgMail={changeEmail}
       />
       <EditUser
-        submit={handleUpdate}
-        firstName={objSubmit.firstName}
-        lastName={objSubmit.lastName}
-        title={objSubmit.title}
-        picture={objSubmit.picture}
-        email={objSubmit.email}
-        changeFirstName={(e) => handleChange(e.target.value, "firstName")}
-        changeLastName={(e) => handleChange(e.target.value, "lastName")}
-        changetitle={(e) => handleChange(e.target.value, "title")}
-        changePicture={(e) => handleChange(e.target.value, "picture")}
-        changeEmail={(e) => handleChange(e.target.value, "email")}
+        datas={dataUsers}
+        update={submit}
+        fName={firstName}
+        lName={lastName}
+        title={title}
+        pict={picture}
+        mail={email}
+        cgFName={changeFirstName}
+        cgLName={changeLastName}
+        cgTitle={changeTitle}
+        cgPict={changePicture}
+        cgMail={changeEmail}
       />
-      <PreviewImageUser id={users.id} image={users.picture} />
+      <PreviewImageUser id={dataUsers.id} image={dataUsers.picture} />
     </div>
   );
 }
 
-function Post() {
+function Post({
+  dataPost,
+  onDelete,
+  createPost,
+  submit,
+  owner,
+  caption,
+  image,
+  tags,
+  changeOwner,
+  changeImage,
+  changeCaption,
+  changeTags,
+}) {
   return (
     <div
       id="user-tab"
@@ -321,7 +246,7 @@ function Post() {
       >
         Create Post
       </label>
-      <table className="w-full md:w-10/12 border shadow-md">
+      <table className="w-full md:w-11/12 border shadow-md mb-12">
         <tr id="header" className="w-full flex  border-b">
           <th className="w-1/3 border-r">Caption</th>
           <th className="w-1/3 border-r">Tags</th>
@@ -329,36 +254,81 @@ function Post() {
           <th className="w-1/3 border-r">User</th>
           <th className="w-1/3">Action</th>
         </tr>
-        <tr id="content" className="w-full py-4 flex border-b">
-          <td className="w-1/5 flex items-center justify-center border-r">
-            Halo dek!!!
-          </td>
-          <td className="w-1/5 flex items-center justify-center border-r">
-            Handoko
-          </td>
-          <td className="w-1/5 border-r flex justify-center items-center cursor-pointer">
-            <label htmlFor="my-modal-4" className="cursor-pointer">
-              <img src={logo} alt="" className="w-20 h-20" />
-            </label>
-          </td>
-          <td className="w-1/5 flex items-center justify-center border-r">
-            Handoko
-          </td>
-          <td className="w-1/5 flex flex-col sm:flex-row justify-center items-center gap-2">
-            <label
-              htmlFor="my-modal-3"
-              className="px-4 py-1 rounded-md bg-blue-500 hover:brightness-90 text-white text-sm font-semibold cursor-pointer"
+        {dataPost.length !== 0 ? (
+          dataPost.map((item) => (
+            <tr
+              key={item.id}
+              id="content"
+              className="w-full py-4 px-2 flex border-b"
             >
-              Edit
-            </label>
-            <button className="px-3 py-1 rounded-md bg-red-500 hover:brightness-90 text-white text-sm font-semibold">
-              Delete
-            </button>
-          </td>
-        </tr>
+              <td className="w-1/5 flex items-center justify-center border-r text-left text-clip overflow-hidden">
+                {item.text}
+              </td>
+              <td className="w-1/5 flex items-center justify-center border-r text-center text-blue-400">
+                {item.tags.map((tag) => `#${tag} `)}
+              </td>
+              <td className="w-1/5 border-r flex justify-center items-center cursor-pointer">
+                <label htmlFor="my-modal-4" className="cursor-pointer">
+                  <img src={item.image} alt="" className="w-20 h-20" />
+                </label>
+              </td>
+              <td
+                key={item.owner.id}
+                className="w-1/5 flex items-center justify-center border-r"
+              >
+                {item.owner.title} {item.owner.firstName} {item.owner.lastName}
+              </td>
+              <td className="w-1/5 flex flex-col lg:flex-row justify-center items-center gap-2">
+                <label
+                  htmlFor="my-modal-3"
+                  className="px-2 md:px-4 py-1 rounded-md bg-blue-500 hover:brightness-90 text-white text-sm font-semibold cursor-pointer"
+                >
+                  Edit
+                </label>
+                <button
+                  onClick={() => onDelete(item.id)}
+                  className="px-2 md:px-3 py-1 rounded-md bg-red-500 hover:brightness-90 text-white text-sm font-semibold"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))
+        ) : (
+          <tr id="content" className="w-full py-4 px-2 flex border-b">
+            <td className="w-1/5 flex items-center justify-center border-r text-left text-clip overflow-hidden">
+              Create Post First
+            </td>
+            <td className="w-1/5 flex items-center justify-center border-r text-center text-blue-400">
+              Create Post First
+            </td>
+            <td className="w-1/5 border-r flex justify-center items-center cursor-pointer">
+              <label htmlFor="my-modal-4" className="cursor-pointer">
+                Create Post First
+              </label>
+            </td>
+            <td className="w-1/5 flex items-center justify-center border-r">
+              Create Post First
+            </td>
+            <td className="w-1/5 flex flex-col sm:flex-row justify-center items-center gap-2">
+              Create Post First
+            </td>
+          </tr>
+        )}
       </table>
       <EditPost />
-      <CreatePost />
+      <CreatePost
+        create={createPost}
+        update={submit}
+        own={owner}
+        img={image}
+        capt={caption}
+        tags={tags}
+        cngOwn={changeOwner}
+        cngImg={changeImage}
+        cngCapt={changeCaption}
+        cngTags={changeTags}
+      />
       <PreviewImagePost />
     </div>
   );

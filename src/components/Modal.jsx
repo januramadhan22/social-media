@@ -1,18 +1,20 @@
+import { data } from "autoprefixer";
 import React from "react";
 import logo from "../assets/logo.svg";
 
 function EditUser({
-  submit,
-  firstName,
-  lastName,
+  datas,
+  update,
+  fName,
+  lName,
   title,
-  picture,
-  email,
-  changeFirstName,
-  changeLastName,
-  changetitle,
-  changePicture,
-  changeEmail,
+  pict,
+  mail,
+  cgFName,
+  cgLName,
+  cgTitle,
+  cgPict,
+  cgMail,
 }) {
   return (
     <>
@@ -30,31 +32,32 @@ function EditUser({
               <option>Mss</option>
             </select>
             <input
-              onChange={changeFirstName}
-              value={firstName}
+              onChange={cgFName}
+              value={fName}
               type="text"
-              placeholder="Firstname"
+              placeholder={"Change Firstname"}
               className="input input-bordered w-full max-w-xs"
             />
             <input
-              onChange={changeLastName}
-              value={lastName}
+              onChange={cgLName}
+              value={lName}
               type="text"
-              placeholder="Lastname"
+              placeholder="Change Lastname"
               className="input input-bordered w-full max-w-xs"
             />
             <input
-              onChange={changeEmail}
-              value={email}
+              onChange={cgMail}
+              value={mail}
               type="text"
-              placeholder="Email"
+              placeholder="Change Email"
               className="input input-bordered w-full max-w-xs"
             />
             <input
-              onChange={changePicture}
-              value={picture}
-              type="file"
-              className="file-input file-input-bordered file-input-primary w-full max-w-xs"
+              onChange={cgPict}
+              value={pict}
+              type="text"
+              placeholder="Change Picture"
+              className="input input-bordered w-full max-w-xs"
             />
           </form>
           <div className="w-full flex justify-center py-2 gap-3">
@@ -65,7 +68,7 @@ function EditUser({
               Close
             </label>
             <button
-              onClick={submit}
+              onClick={update}
               className="px-4 py-1 rounded-md font-semibold text-white bg-blue-600 hover:brightness-125"
             >
               Submit
@@ -78,17 +81,17 @@ function EditUser({
 }
 
 function CreateUser({
-  createUser,
-  firstName,
-  lastName,
+  create,
+  fName,
+  lName,
   title,
-  picture,
-  email,
-  changeFirstName,
-  changeLastName,
-  changetitle,
-  changePicture,
-  changeEmail,
+  pict,
+  mail,
+  cgFName,
+  cgLName,
+  cgTitle,
+  cgPict,
+  cgMail,
 }) {
   return (
     <>
@@ -101,7 +104,7 @@ function CreateUser({
             className="w-full flex flex-col items-center gap-4"
           >
             <select
-              onChange={changetitle}
+              onChange={cgTitle}
               value={title}
               className="select select-bordered w-full max-w-xs"
             >
@@ -113,31 +116,32 @@ function CreateUser({
               <option>Mss</option>
             </select>
             <input
-              onChange={changeFirstName}
-              value={firstName}
+              onChange={cgFName}
+              value={fName}
               type="text"
-              placeholder="Firstname"
+              placeholder="Input Firstname"
               className="input input-bordered w-full max-w-xs"
             />
             <input
-              onChange={changeLastName}
-              value={lastName}
+              onChange={cgLName}
+              value={lName}
               type="text"
-              placeholder="Lastname"
+              placeholder="Input Lastname"
               className="input input-bordered w-full max-w-xs"
             />
             <input
-              onChange={changeEmail}
-              value={email}
+              onChange={cgMail}
+              value={mail}
               type="text"
-              placeholder="Email"
+              placeholder="Input Email"
               className="input input-bordered w-full max-w-xs"
             />
             <input
-              onChange={changePicture}
-              value={picture}
-              type="file"
-              className="file-input file-input-bordered file-input-primary w-full max-w-xs"
+              onChange={cgPict}
+              value={pict}
+              type="text"
+              placeholder="Input Link Picture"
+              className="input input-bordered w-full max-w-xs"
             />
           </form>
           <div className="w-full flex justify-center py-2 gap-3">
@@ -148,7 +152,7 @@ function CreateUser({
               Close
             </label>
             <button
-              onClick={createUser}
+              onClick={create}
               className="px-4 py-1 rounded-md font-semibold text-white bg-blue-600 hover:brightness-125"
             >
               Submit
@@ -213,7 +217,18 @@ function EditPost() {
   );
 }
 
-function CreatePost() {
+function CreatePost({
+  create,
+  update,
+  own,
+  img,
+  capt,
+  cngOwn,
+  tags,
+  cngImg,
+  cngCapt,
+  cngTags,
+}) {
   return (
     <>
       <input type="checkbox" id="my-modal" className="modal-toggle" />
@@ -230,23 +245,32 @@ function CreatePost() {
               <option>Mss</option>
             </select>
             <input
+              onChange={cngCapt}
+              value={capt}
               type="text"
-              placeholder="Firstname"
+              placeholder="Caption"
               className="input input-bordered w-full max-w-xs"
             />
             <input
+              onChange={cngImg}
+              value={img}
               type="text"
-              placeholder="Lastname"
+              placeholder="Image"
               className="input input-bordered w-full max-w-xs"
             />
             <input
+              // onChange={cngEmail}
+              // value={email}
               type="text"
-              placeholder="Email"
+              placeholder="Likes"
               className="input input-bordered w-full max-w-xs"
             />
             <input
-              type="file"
-              className="file-input file-input-bordered file-input-primary w-full max-w-xs"
+              onChange={cngTags}
+              value={tags}
+              type="text"
+              placeholder="Tags"
+              className="input input-bordered w-full max-w-xs"
             />
           </form>
           <div className="w-full flex justify-center py-2 gap-3">
@@ -256,7 +280,10 @@ function CreatePost() {
             >
               Close
             </label>
-            <button className="px-4 py-1 rounded-md font-semibold text-white bg-blue-600 hover:brightness-125">
+            <button
+              onClick={create}
+              className="px-4 py-1 rounded-md font-semibold text-white bg-blue-600 hover:brightness-125"
+            >
               Submit
             </button>
           </div>
